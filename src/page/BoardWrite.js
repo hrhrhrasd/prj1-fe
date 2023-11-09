@@ -9,7 +9,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { logDOM } from "@testing-library/react";
 import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
