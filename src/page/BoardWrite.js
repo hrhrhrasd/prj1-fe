@@ -25,19 +25,27 @@ export function BoardWrite() {
         content,
         writer,
       })
-      .then(() =>
+      .then(() => {
         toast({
-          description: "새 글이 저장되었습니다",
+          description: "새 글이 저장되었습니다.",
           status: "success",
-        }),
-      )
-      .catch(() =>
-        toast({
-          description: "저장 실패",
-          status: "error",
-        }),
-      )
-      .finally(() => console.log("최종"));
+        });
+      })
+      .catch((error) => {
+        console.log(error.response.status);
+        if (error.response.status === 400) {
+          toast({
+            description: "작성한 내용을 확인해주세요.",
+            status: "error",
+          });
+        } else {
+          toast({
+            description: "저장 중에 문제가 발생하였습니다.",
+            status: "error",
+          });
+        }
+      })
+      .finally(() => console.log("끝"));
   }
 
   return (
