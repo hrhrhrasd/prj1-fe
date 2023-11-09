@@ -10,15 +10,20 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { logDOM } from "@testing-library/react";
+import { useNavigate } from "react-router-dom";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [writer, setWriter] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  let navigate = useNavigate();
 
   const toast = useToast();
 
   function handleSubmit() {
+    setIsSubmitting(true);
     axios
       .post("/api/board/add", {
         title,
@@ -30,6 +35,7 @@ export function BoardWrite() {
           description: "새 글이 저장되었습니다.",
           status: "success",
         });
+        navigate("/");
       })
       .catch((error) => {
         console.log(error.response.status);
@@ -45,7 +51,7 @@ export function BoardWrite() {
           });
         }
       })
-      .finally(() => console.log("끝"));
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -67,7 +73,11 @@ export function BoardWrite() {
           <FormLabel>작성자</FormLabel>
           <Input value={writer} onChange={(e) => setWriter(e.target.value)} />
         </FormControl>
-        <Button colorScheme={"blue"} onClick={handleSubmit}>
+        <Button
+          isDisabled={isSubmitting}
+          colorScheme={"blue"}
+          onClick={handleSubmit}
+        >
           저장
         </Button>
       </Box>
