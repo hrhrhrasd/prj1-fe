@@ -20,6 +20,7 @@ export function BoardList() {
   useEffect(() => {
     axios.get("/api/board/list").then(({ data }) => setBoardList(data));
   }, []);
+
   if (boardList === null) {
     return <Spinner />;
   }
