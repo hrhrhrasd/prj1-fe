@@ -94,7 +94,7 @@ export function MemberView() {
         탈퇴
       </Button>
 
-      {/* 삭제 모달 */}
+      {/* 탈퇴 모달 */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
