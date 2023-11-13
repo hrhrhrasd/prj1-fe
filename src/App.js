@@ -12,7 +12,7 @@ import { BoardView } from "./page/board/BoardView";
 import { BoardEdit } from "./page/board/BoardEdit";
 import { MemberSignup } from "./page/member/memberSignup";
 import { MemberList } from "./page/member/MemberList";
-import {MemberView} from "./page/member/memberView";
+import { MemberView } from "./page/member/memberView";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
