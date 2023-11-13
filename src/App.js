@@ -10,9 +10,9 @@ import { BoardList } from "./page/board/BoardList";
 import { HomeLayout } from "./layout/HomeLayout";
 import { BoardView } from "./page/board/BoardView";
 import { BoardEdit } from "./page/board/BoardEdit";
-import { MemberSignup } from "./page/member/memberSignup";
+import { MemberSignup } from "./page/member/MemberSignup";
 import { MemberList } from "./page/member/MemberList";
-import { MemberView } from "./page/member/memberView";
+import { MemberView } from "./page/member/MemberView";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
