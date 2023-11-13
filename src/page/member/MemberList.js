@@ -46,7 +46,7 @@ export function MemberList() {
         <Tbody>
           {list.map((member) => (
             <Tr
-              _hover={"poiner"}
+              _hover={"pointer"}
               onClick={() => handleTableRowClick(member.id)}
               key={member.id}
             >

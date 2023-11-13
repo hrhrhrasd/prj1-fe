@@ -27,11 +27,15 @@ export function MemberView() {
   const navigate = useNavigate();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    axios
-      .get("/api/member?" + params.toString())
-      .then((response) => setMember(response.data));
+    axios.get("/api/member?" + params.toString()).then((response) => {
+      setMember(response.data);
+      setPassword(response.data.password);
+      setEmail(response.data.email);
+    });
   }, []);
 
   if (member === null) {
@@ -73,18 +77,39 @@ export function MemberView() {
       .finally(() => onClose);
   }
 
+  function handleUpdateMember() {
+    axios
+      .post("api/member", {
+        params,
+        password,
+        email,
+      })
+      .then(() => {
+        toast({
+          description: "수정 완료",
+          status: "success",
+        });
+      });
+  }
+
   return (
     <Box>
       <h1>{member.id}님 정보</h1>
       <FormControl>
         <FormLabel>password</FormLabel>
-        <Input type="text" value={member.password} readOnly />
+        <Input
+          type="text"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </FormControl>
       <FormControl>
         <FormLabel>email</FormLabel>
-        <Input value={member.email} readOnly />
+        <Input value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormControl>
-      <Button colorScheme="purple">수정</Button>
+      <Button colorScheme="purple" onClick={handleUpdateMember}>
+        수정
+      </Button>
       <Button colorScheme="red" onClick={onOpen}>
         탈퇴
       </Button>
