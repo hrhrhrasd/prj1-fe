@@ -47,7 +47,7 @@ export function MemberView() {
     // final -> modal 닫기
 
     axios
-      .delete("api/member/?" + params.toString())
+      .delete("api/member?" + params.toString())
       .then(() => {
         toast({
           description: "회원 탈퇴 완료",
