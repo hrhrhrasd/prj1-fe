@@ -38,6 +38,7 @@ export function MemberList() {
         <Thead>
           <Tr>
             <Th>id</Th>
+            <Th>nickName</Th>
             <Th>pw</Th>
             <Th>email</Th>
             <Th>가입일시</Th>
@@ -46,11 +47,12 @@ export function MemberList() {
         <Tbody>
           {list.map((member) => (
             <Tr
-              _hover={"poiner"}
+              _hover={{ cursor: "pointer" }}
               onClick={() => handleTableRowClick(member.id)}
               key={member.id}
             >
               <Td>{member.id}</Td>
+              <Td>{member.nickName}</Td>
               <Td>{member.password}</Td>
               <Td>{member.email}</Td>
               <Td>{member.inserted}</Td>

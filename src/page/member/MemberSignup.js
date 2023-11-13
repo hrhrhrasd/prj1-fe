@@ -17,8 +17,10 @@ export function MemberSignup() {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [email, setEmail] = useState("");
+  const [nickName, setNickName] = useState("");
 
   const [idAvailable, setIdAvailable] = useState(false);
+  const [nickNameAvailable, setNickNameAvailable] = useState(false);
   const [emailAvailable, setEmailAvailable] = useState(false);
 
   const toast = useToast();
@@ -31,6 +33,10 @@ export function MemberSignup() {
   }
 
   if (!idAvailable) {
+    submitAvailable = false;
+  }
+
+  if (!nickNameAvailable) {
     submitAvailable = false;
   }
 
@@ -48,6 +54,7 @@ export function MemberSignup() {
         id,
         password,
         email,
+        nickName,
       })
       .then(() => {
         // toast
@@ -98,6 +105,30 @@ export function MemberSignup() {
       });
   }
 
+  function handleNickNameCheck() {
+    const searchParam = new URLSearchParams();
+    searchParam.set("nickName", nickName);
+
+    axios
+      .get("/api/member/check?" + searchParam.toString())
+      .then(() => {
+        setNickNameAvailable(false);
+        toast({
+          description: "이미 사용 중인 NICKNAME입니다.",
+          status: "warning",
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
+          setNickNameAvailable(true);
+          toast({
+            description: "사용 가능한 NICKNAME입니다.",
+            status: "success",
+          });
+        }
+      });
+  }
+
   function handleEmailCheck() {
     const params = new URLSearchParams();
     params.set("email", email);
@@ -139,6 +170,22 @@ export function MemberSignup() {
         </Flex>
         <FormErrorMessage>ID 중복체크를 해주세요.</FormErrorMessage>
       </FormControl>
+
+      <FormControl isInvalid={!nickNameAvailable}>
+        <FormLabel>nickName</FormLabel>
+        <Flex>
+          <Input
+            value={nickName}
+            onChange={(e) => {
+              setNickName(e.target.value);
+              setNickNameAvailable(false);
+            }}
+          />
+          <Button onClick={handleNickNameCheck}>중복확인</Button>
+        </Flex>
+        <FormErrorMessage>NICKNAME 중복체크를 해주세요.</FormErrorMessage>
+      </FormControl>
+
       <FormControl isInvalid={password.length === 0}>
         <FormLabel>password</FormLabel>
         <Input
