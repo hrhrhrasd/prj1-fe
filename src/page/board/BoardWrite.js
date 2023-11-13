@@ -17,9 +17,8 @@ export function BoardWrite() {
   const [writer, setWriter] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  let navigate = useNavigate();
-
   const toast = useToast();
+  const navigate = useNavigate();
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -70,12 +69,15 @@ export function BoardWrite() {
         </FormControl>
         <FormControl>
           <FormLabel>작성자</FormLabel>
-          <Input value={writer} onChange={(e) => setWriter(e.target.value)} />
+          <Input
+            value={writer}
+            onChange={(e) => setWriter(e.target.value)}
+          ></Input>
         </FormControl>
         <Button
           isDisabled={isSubmitting}
-          colorScheme={"blue"}
           onClick={handleSubmit}
+          colorScheme="blue"
         >
           저장
         </Button>

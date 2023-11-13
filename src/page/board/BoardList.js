@@ -15,10 +15,12 @@ import { useNavigate } from "react-router-dom";
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("/api/board/list").then(({ data }) => setBoardList(data));
+    axios
+      .get("/api/board/list")
+      .then((response) => setBoardList(response.data));
   }, []);
 
   if (boardList === null) {
