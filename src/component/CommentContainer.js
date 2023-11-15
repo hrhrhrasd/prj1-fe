@@ -32,17 +32,7 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentList({ boardId }) {
-  const [commentList, setCommentList] = useState(null);
-
-  useEffect(() => {
-    const params = new URLSearchParams();
-    params.set("id", boardId);
-    axios
-      .get("/api/comment/list?" + params)
-      .then(({ data }) => setCommentList(data));
-  }, []);
-
+function CommentList({ commentList }) {
   if (commentList == null) {
     return <Spinner />;
   }
@@ -74,13 +64,23 @@ function CommentList({ boardId }) {
 
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [commentList, setCommentList] = useState([]);
   function handleSubmit(comment) {
     setIsSubmitting(true);
     axios
       .post("/api/comment/add", comment)
       .finally(() => setIsSubmitting(false));
   }
+
+  useEffect(() => {
+    if (!isSubmitting) {
+      const params = new URLSearchParams();
+      params.set("id", boardId);
+      axios
+        .get("/api/comment/list?" + params)
+        .then(({ data }) => setCommentList(data));
+    }
+  }, [isSubmitting]);
   return (
     <Box>
       <CommentForm
@@ -88,7 +88,7 @@ export function CommentContainer({ boardId }) {
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
-      <CommentList boardId={boardId} />
+      <CommentList boardId={boardId} commentList={commentList} />
     </Box>
   );
 }
