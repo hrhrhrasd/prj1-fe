@@ -37,6 +37,8 @@ function CommentList({ commentList }) {
     return <Spinner />;
   }
 
+  function handleCommentDelete(comment) {}
+
   return (
     <Card>
       <CardHeader>
@@ -51,9 +53,14 @@ function CommentList({ commentList }) {
                 <Text fontSize={"xs"}>{comment.inserted}</Text>
               </Flex>
               {/* sx : 줄바꿈 적용하기 */}
-              <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
-                {comment.comment}
-              </Text>
+              <Flex justifyContent={"space-between"}>
+                <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
+                  {comment.comment}
+                </Text>
+                <Button onClick={() => handleCommentDelete(comment)}>
+                  삭제
+                </Button>
+              </Flex>
             </Box>
           ))}
         </Stack>
