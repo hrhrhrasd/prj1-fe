@@ -21,7 +21,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { LoginContext } from "./LoginProvider";
 
@@ -89,7 +89,8 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
 export function CommentContainer({ boardId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [commentList, setCommentList] = useState([]);
-  const [id, setId] = useState(0);
+  // const [id, setId] = useState(0);
+  const commentIdRef = useRef(0);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -113,14 +114,14 @@ export function CommentContainer({ boardId }) {
   }
   function handleDelete() {
     setIsSubmitting(true);
-    axios.delete("/api/comment/" + id).finally(() => {
+    axios.delete("/api/comment/" + commentIdRef.current).finally(() => {
       onClose();
       setIsSubmitting(false);
     });
   }
   function handleDeleteModalOpen(id) {
     // id 저장
-    setId(id);
+    commentIdRef.current = id;
     // 모달 열기
     onOpen();
   }
