@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
   const [comment, setComment] = useState("");
@@ -37,7 +38,9 @@ function CommentList({ commentList }) {
     return <Spinner />;
   }
 
-  function handleCommentDelete(comment) {}
+  function handleCommentDelete(id) {
+    axios.delete("/api/comment/" + id);
+  }
 
   return (
     <Card>
@@ -57,8 +60,11 @@ function CommentList({ commentList }) {
                 <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
                   {comment.comment}
                 </Text>
-                <Button onClick={() => handleCommentDelete(comment)}>
-                  삭제
+                <Button
+                  size={"xs"}
+                  onClick={() => handleCommentDelete(comment.id)}
+                >
+                  <DeleteIcon />
                 </Button>
               </Flex>
             </Box>
