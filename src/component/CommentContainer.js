@@ -33,13 +33,9 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentList({ commentList }) {
+function CommentList({ commentList, onDelete, isSubmitting }) {
   if (commentList == null) {
     return <Spinner />;
-  }
-
-  function handleCommentDelete(id) {
-    axios.delete("/api/comment/" + id);
   }
 
   return (
@@ -61,8 +57,9 @@ function CommentList({ commentList }) {
                   {comment.comment}
                 </Text>
                 <Button
+                  isDisabled={isSubmitting}
                   size={"xs"}
-                  onClick={() => handleCommentDelete(comment.id)}
+                  onClick={() => onDelete(comment.id)}
                 >
                   <DeleteIcon />
                 </Button>
@@ -85,6 +82,11 @@ export function CommentContainer({ boardId }) {
       .finally(() => setIsSubmitting(false));
   }
 
+  function handleCommentDelete(id) {
+    setIsSubmitting(true);
+    axios.delete("/api/comment/" + id).finally(() => setIsSubmitting(false));
+  }
+
   useEffect(() => {
     if (!isSubmitting) {
       const params = new URLSearchParams();
@@ -101,7 +103,12 @@ export function CommentContainer({ boardId }) {
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
-      <CommentList boardId={boardId} commentList={commentList} />
+      <CommentList
+        boardId={boardId}
+        commentList={commentList}
+        isSubmitting={isSubmitting}
+        onDelete={handleCommentDelete}
+      />
     </Box>
   );
 }
