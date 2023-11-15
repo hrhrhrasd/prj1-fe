@@ -1,6 +1,6 @@
-import { Box, Button, Input, Textarea } from "@chakra-ui/react";
+import { Box, Button, Input, Spinner, Textarea } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function CommentForm({ boardId }) {
   const [comment, setComment] = useState("");
@@ -28,10 +28,28 @@ function CommentList({ boardId }) {
     params.set("id", boardId);
     axios
       .get("/api/comment/list?" + params)
-      .then(({ data }) => setCommentList(data));
+      .then(({ data }) => setCommentList(data))
+      .finally(() => console.log(commentList));
   }, []);
 
-  return <Box>댓글 리스트</Box>;
+  if (commentList === null) {
+    return <Spinner />;
+  }
+
+  return (
+    <Box>
+      {commentList
+        .slice(0)
+        .reverse()
+        .map((comment) => (
+          <Box key={comment.id}>
+            <Box>작성자 : {comment.memberId}</Box>
+            <Box>내용 : {comment.comment}</Box>
+            <Box>작성일 : {comment.inserted}</Box>
+          </Box>
+        ))}
+    </Box>
+  );
 }
 
 export function CommentContainer({ boardId }) {
