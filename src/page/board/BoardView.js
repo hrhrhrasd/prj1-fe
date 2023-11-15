@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
+import { StarIcon } from "@chakra-ui/icons";
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
@@ -66,7 +67,13 @@ export function BoardView() {
     <Box>
       <h1>{board.id}번 글 보기</h1>
       <FormControl>
-        <FormLabel>제목</FormLabel>
+        <FormLabel>
+          제목
+          <Button size={"xs"}>
+            <StarIcon size={"xs"} />
+          </Button>
+          {board.good}
+        </FormLabel>
         <Input value={board.title} readOnly />
       </FormControl>
       <FormControl>
