@@ -11,6 +11,7 @@ import {
   StackDivider,
   Text,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -33,11 +34,19 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 function CommentList({ commentList }) {
+  const toast = useToast();
   if (commentList == null) {
     return <Spinner />;
   }
 
-  function handleCommentDelete(comment) {}
+  function handleCommentDelete(comment) {
+    axios.delete("/api/comment/delete?" + comment.id).then(() => {
+      toast({
+        description: "삭제 완료",
+        status: "success",
+      });
+    });
+  }
 
   return (
     <Card>
