@@ -95,7 +95,7 @@ function CommentItem({
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
-        <Heading size={"xs"}>{comment.memberId}</Heading>
+        <Heading size={"xs"}>{comment.nickName}</Heading>
         <Text fontSize={"xs"}>{comment.inserted}</Text>
       </Flex>
       {/* sx : 줄바꿈 적용하기 */}

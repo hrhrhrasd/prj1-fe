@@ -50,7 +50,9 @@ export function BoardList() {
                 onClick={() => navigate("/board/" + board.id)}
               >
                 <Td>{board.id}</Td>
-                <Td>{board.title}</Td>
+                <Td>
+                  {board.title}({board.commentCount})
+                </Td>
                 <Td>{board.nickName}</Td>
                 <Td>{board.inserted}</Td>
               </Tr>
