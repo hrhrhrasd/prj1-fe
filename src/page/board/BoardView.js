@@ -24,10 +24,13 @@ import {
 import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeartCircleCheck } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardView() {
   const [board, setBoard] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -38,9 +41,11 @@ export function BoardView() {
   const { hasAccess, isAdmin } = useContext(LoginContext);
 
   useEffect(() => {
-    axios
-      .get("/api/board/id/" + id)
-      .then((response) => setBoard(response.data));
+    axios.get("/api/board/id/" + id).then((response) => {
+      setBoard(response.data);
+      setIsLiked(response.data.liked);
+      setLikeCount(response.data.countLike);
+    });
   }, []);
 
   if (board === null) {
@@ -67,16 +72,36 @@ export function BoardView() {
   }
 
   function handleLike() {
-    axios.post("/api/like", { boardId: board.id }).then().catch().finally();
+    axios
+      .post("/api/like", { boardId: board.id })
+      .then(() => {
+        setIsLiked(!isLiked);
+        if (isLiked === true) {
+          setLikeCount(likeCount - 1);
+        } else {
+          setLikeCount(likeCount + 1);
+        }
+      })
+      .catch()
+      .finally();
   }
 
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
         <Heading size={"xl"}>{board.id}번 글 보기</Heading>
-        <Button variant={"ghost"} size={"xl"} onClick={handleLike}>
-          <FontAwesomeIcon icon={faHeart} size={"xl"} />
-        </Button>
+        {isLiked && (
+          <Button variant={"ghost"} size={"xl"} onClick={handleLike}>
+            {likeCount}
+            <FontAwesomeIcon icon={faHeartCircleCheck} size={"xl"} />
+          </Button>
+        )}
+        {isLiked || (
+          <Button variant={"ghost"} size={"xl"} onClick={handleLike}>
+            {likeCount}
+            <FontAwesomeIcon icon={faHeart} size={"xl"} />
+          </Button>
+        )}
       </Flex>
       <FormControl>
         <FormLabel>제목</FormLabel>
