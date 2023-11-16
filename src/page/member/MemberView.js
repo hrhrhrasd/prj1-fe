@@ -62,7 +62,7 @@ export function MemberView() {
         });
         navigate("/");
 
-        // TODO: 로그아웃 기능 추가하기
+        // fetchLogin();
       })
       .catch((error) => {
         if (error.response.status === 401 || error.response.status === 403) {
