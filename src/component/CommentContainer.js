@@ -43,6 +43,30 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
+function CommentItem({ comment, onDeleteModalOpen }) {
+  const { hasAccess } = useContext(LoginContext);
+  return (
+    <Box>
+      <Flex justifyContent={"space-between"}>
+        <Heading size={"xs"}>{comment.memberId}</Heading>
+        <Text fontSize={"xs"}>{comment.inserted}</Text>
+      </Flex>
+      {/* sx : 줄바꿈 적용하기 */}
+      <Flex justifyContent={"space-between"}>
+        <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
+          {comment.comment}
+        </Text>
+
+        {hasAccess(comment.memberId) && (
+          <Button size={"xs"} onClick={() => onDeleteModalOpen(comment.id)}>
+            <DeleteIcon />
+          </Button>
+        )}
+      </Flex>
+    </Box>
+  );
+}
+
 function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
   const { hasAccess } = useContext(LoginContext);
 
@@ -58,28 +82,11 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
       <CardBody>
         <Stack divider={<StackDivider />} spacing={"4"}>
           {commentList.map((comment) => (
-            <Box key={comment.id}>
-              <Flex justifyContent={"space-between"}>
-                <Heading size={"xs"}>{comment.memberId}</Heading>
-                <Text fontSize={"xs"}>{comment.inserted}</Text>
-              </Flex>
-              {/* sx : 줄바꿈 적용하기 */}
-              <Flex justifyContent={"space-between"}>
-                <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
-                  {comment.comment}
-                </Text>
-
-                {hasAccess(comment.memberId) && (
-                  <Button
-                    isDisabled={isSubmitting}
-                    size={"xs"}
-                    onClick={() => onDeleteModalOpen(comment.id)}
-                  >
-                    <DeleteIcon />
-                  </Button>
-                )}
-              </Flex>
-            </Box>
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              onDeleteModalOpen={onDeleteModalOpen}
+            />
           ))}
         </Stack>
       </CardBody>
