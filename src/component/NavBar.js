@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext } from "react";
 import { LoginContext } from "./LoginProvider";
+import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function NavBar() {
   const { fetchLogin, login, isAuthenticated, isAdmin } =
@@ -32,7 +34,10 @@ export function NavBar() {
 
   return (
     <Flex>
-      <Button onClick={() => navigate("/")}>home</Button>
+      <Button onClick={() => navigate("/")}>
+        <FontAwesomeIcon icon={faHouse} />
+        <span style={{ paddingLeft: "5px" }}>home</span>
+      </Button>
       {isAuthenticated() && (
         <Button onClick={() => navigate("/write")}>write</Button>
       )}
