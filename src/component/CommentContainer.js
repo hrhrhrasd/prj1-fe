@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, NotAllowedIcon } from "@chakra-ui/icons";
 import { LoginContext } from "./LoginProvider";
 
 function CommentForm({ boardId, isSubmitting, onSubmit }) {
@@ -44,7 +44,11 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
 }
 
 function CommentItem({ comment, onDeleteModalOpen }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [commentEdited, setCommentEdited] = useState(comment.comment);
+
   const { hasAccess } = useContext(LoginContext);
+
   return (
     <Box>
       <Flex justifyContent={"space-between"}>
@@ -53,14 +57,39 @@ function CommentItem({ comment, onDeleteModalOpen }) {
       </Flex>
       {/* sx : 줄바꿈 적용하기 */}
       <Flex justifyContent={"space-between"}>
-        <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
-          {comment.comment}
-        </Text>
+        <Box flex={1}>
+          <Text sx={{ whiteSpace: "pre-wrap" }} pt={"2"} fontSize={"sm"}>
+            {comment.comment}
+          </Text>
+          {isEditing && (
+            <Textarea
+              value={commentEdited}
+              onChange={(e) => setCommentEdited(e.target.value)}
+            />
+          )}
+        </Box>
 
         {hasAccess(comment.memberId) && (
-          <Button size={"xs"} onClick={() => onDeleteModalOpen(comment.id)}>
-            <DeleteIcon />
-          </Button>
+          <Box>
+            {isEditing || (
+              <Box>
+                <Button size={"xs"} onClick={() => setIsEditing(true)}>
+                  <EditIcon />
+                </Button>
+                <Button
+                  size={"xs"}
+                  onClick={() => onDeleteModalOpen(comment.id)}
+                >
+                  <DeleteIcon />
+                </Button>
+              </Box>
+            )}
+            {isEditing && (
+              <Button size={"xs"} onClick={() => setIsEditing(false)}>
+                <NotAllowedIcon />
+              </Button>
+            )}
+          </Box>
         )}
       </Flex>
     </Box>
@@ -68,8 +97,6 @@ function CommentItem({ comment, onDeleteModalOpen }) {
 }
 
 function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
-  const { hasAccess } = useContext(LoginContext);
-
   if (commentList == null) {
     return <Spinner />;
   }
