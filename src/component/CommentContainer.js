@@ -43,17 +43,53 @@ function CommentForm({ boardId, isSubmitting, onSubmit }) {
   );
 }
 
-function CommentItem({ comment, onDeleteModalOpen }) {
+function CommentItem({
+  comment,
+  onDeleteModalOpen,
+  setIsSubmitting,
+  isSubmitting,
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [commentEdited, setCommentEdited] = useState(comment.comment);
 
   const { hasAccess } = useContext(LoginContext);
 
+  const toast = useToast();
+
   function handleSubmit() {
-    axios.put("/api/comment/edit", {
-      id: comment.id,
-      comment: commentEdited,
-    });
+    // TODO: 댓글 list refresh
+    // TODO: textarea 닫기
+    // TODO: 응답 코드에 따른 기능들
+    setIsSubmitting(true);
+    setIsEditing(false);
+
+    axios
+      .put("/api/comment/edit", {
+        id: comment.id,
+        comment: commentEdited,
+      })
+      .then(({ data }) => {
+        toast({
+          description: "댓글이 수정 되었습니다",
+          status: "success",
+        });
+      })
+      .catch((error) => {
+        if (error.response.status == 401 || error.response.status == 403) {
+          toast({
+            description: "권한이 없습니다",
+            status: "warning",
+          });
+        }
+
+        if (error.response.status == 400) {
+          toast({
+            description: "입력값을 확인해주세요",
+            status: "warning",
+          });
+        }
+      })
+      .finally(() => setIsSubmitting(false));
   }
 
   return (
@@ -106,7 +142,12 @@ function CommentItem({ comment, onDeleteModalOpen }) {
   );
 }
 
-function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
+function CommentList({
+  commentList,
+  onDeleteModalOpen,
+  isSubmitting,
+  setIsSubmitting,
+}) {
   if (commentList == null) {
     return <Spinner />;
   }
@@ -123,6 +164,8 @@ function CommentList({ commentList, onDeleteModalOpen, isSubmitting }) {
               key={comment.id}
               comment={comment}
               onDeleteModalOpen={onDeleteModalOpen}
+              isSubmitting={isSubmitting}
+              setIsSubmitting={setIsSubmitting}
             />
           ))}
         </Stack>
@@ -212,6 +255,7 @@ export function CommentContainer({ boardId }) {
       <CommentList
         boardId={boardId}
         commentList={commentList}
+        setIsSubmitting={setIsSubmitting}
         isSubmitting={isSubmitting}
         onDeleteModalOpen={handleDeleteModalOpen}
       />
