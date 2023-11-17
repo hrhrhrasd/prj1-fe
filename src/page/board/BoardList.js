@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   Badge,
   Box,
+  Button,
+  Flex,
   Spinner,
   Table,
   Tbody,
@@ -11,23 +13,33 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { ChatIcon } from "@chakra-ui/icons";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ChatIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
+  const [pageInfo, setPageInfo] = useState(null);
 
   const [params] = useSearchParams();
-
+  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("/api/board/list?" + params)
-      .then((response) => setBoardList(response.data));
-  }, []);
+    axios.get("/api/board/list?" + params).then((response) => {
+      setBoardList(response.data.boardList);
+      setPageInfo(response.data.pageInfo);
+    });
+  }, [location]);
 
-  if (boardList === null) {
+  console.log(pageInfo);
+  // console.log(pageInfo.endPageNumber);
+
+  let btnArr = [];
+  for (let i = 1; i <= 10; i++) {
+    btnArr.push(i);
+  }
+
+  if (boardList === null || pageInfo === null) {
     return <Spinner />;
   }
 
@@ -71,6 +83,19 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+      <Flex>
+        <Button>
+          <ChevronLeftIcon />
+        </Button>
+        {btnArr.map((btn, index) => (
+          <Button key={index} onClick={() => navigate("?p=" + btn)}>
+            {btn}
+          </Button>
+        ))}
+        <Button>
+          <ChevronRightIcon />
+        </Button>
+      </Flex>
     </Box>
   );
 }
