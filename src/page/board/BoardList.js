@@ -15,6 +15,35 @@ import {
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import * as PropTypes from "prop-types";
+
+function Pagination({ pageInfo }) {
+  const pageNumbers = [];
+
+  const navigate = useNavigate();
+
+  for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <Box>
+      <Button>
+        <ChevronLeftIcon />
+      </Button>
+      {pageNumbers.map((pageNumber) => (
+        <Button key={pageNumber} onClick={() => navigate("/?p=" + pageNumber)}>
+          {pageNumber}
+        </Button>
+      ))}
+      <Button>
+        <ChevronRightIcon />
+      </Button>
+    </Box>
+  );
+}
+
+Pagination.propTypes = { pageInfo: PropTypes.any };
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
@@ -30,14 +59,6 @@ export function BoardList() {
       setPageInfo(response.data.pageInfo);
     });
   }, [location]);
-
-  console.log(pageInfo);
-  // console.log(pageInfo.endPageNumber);
-
-  let btnArr = [];
-  for (let i = 1; i <= 10; i++) {
-    btnArr.push(i);
-  }
 
   if (boardList === null || pageInfo === null) {
     return <Spinner />;
@@ -83,19 +104,7 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
-      <Flex>
-        <Button>
-          <ChevronLeftIcon />
-        </Button>
-        {btnArr.map((btn, index) => (
-          <Button key={index} onClick={() => navigate("?p=" + btn)}>
-            {btn}
-          </Button>
-        ))}
-        <Button>
-          <ChevronRightIcon />
-        </Button>
-      </Flex>
+      <Pagination pageInfo={pageInfo} />
     </Box>
   );
 }
