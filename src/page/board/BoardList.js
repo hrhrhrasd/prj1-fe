@@ -14,7 +14,13 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { ChatIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  ChatIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@chakra-ui/icons";
 import * as PropTypes from "prop-types";
 
 function Pagination({ pageInfo }) {
@@ -29,11 +35,16 @@ function Pagination({ pageInfo }) {
   return (
     <Box>
       {pageInfo.prevPageNumber && (
+        <Button variant={"ghost"} onClick={() => navigate("/?p=" + 1)}>
+          <ArrowLeftIcon boxSize={3} />
+        </Button>
+      )}
+      {pageInfo.prevPageNumber && (
         <Button
           variant={"ghost"}
           onClick={() => navigate("/?p=" + pageInfo.prevPageNumber)}
         >
-          <ChevronLeftIcon />
+          <ChevronLeftIcon boxSize={6} />
         </Button>
       )}
       {pageNumbers.map((pageNumber) => (
@@ -52,7 +63,15 @@ function Pagination({ pageInfo }) {
           variant={"ghost"}
           onClick={() => navigate("/?p=" + pageInfo.nextPageNumber)}
         >
-          <ChevronRightIcon />
+          <ChevronRightIcon boxSize={6} />
+        </Button>
+      )}
+      {pageInfo.nextPageNumber && (
+        <Button
+          variant={"ghost"}
+          onClick={() => navigate("/?p=" + pageInfo.lastPageNumber)}
+        >
+          <ArrowRightIcon boxSize={3} />
         </Button>
       )}
     </Box>
