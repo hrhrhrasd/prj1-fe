@@ -17,6 +17,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -24,7 +25,7 @@ import {
 import { LoginContext } from "../../component/LoginProvider";
 import { CommentContainer } from "../../component/CommentContainer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import * as PropTypes from "prop-types";
 
 function LikeContainer({ like, onClick }) {
@@ -33,8 +34,11 @@ function LikeContainer({ like, onClick }) {
   }
 
   return (
-    <Button variant={"ghost"} size={"xl"} onClick={onclick}>
-      <FontAwesomeIcon icon={faHeart} size={"xl"} />
+    <Button variant={"ghost"} size={"xl"} onClick={onClick}>
+      {/*<FontAwesomeIcon icon={faHeart} size={"xl"} />*/}
+      {like.like && <Text>색 하트</Text>}
+      {like.like || <Text>빈 하트</Text>}
+      <Text>{like.countLike}</Text>
     </Button>
   );
 }
