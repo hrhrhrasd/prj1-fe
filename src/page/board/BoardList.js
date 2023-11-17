@@ -38,6 +38,7 @@ export function BoardList() {
             <Tr>
               <Th>id</Th>
               <Th>title</Th>
+              <Th>like</Th>
               <Th>by</Th>
               <Th>at</Th>
             </Tr>
@@ -60,6 +61,7 @@ export function BoardList() {
                     </Badge>
                   )}
                 </Td>
+                <Td>{board.countLike}</Td>
                 <Td>{board.nickName}</Td>
                 <Td>{board.inserted}</Td>
               </Tr>
