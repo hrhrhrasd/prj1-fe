@@ -28,17 +28,21 @@ function Pagination({ pageInfo }) {
 
   return (
     <Box>
-      <Button>
-        <ChevronLeftIcon />
-      </Button>
+      {pageInfo.prevPageNumber && (
+        <Button onClick={() => navigate("/?p=" + pageInfo.prevPageNumber)}>
+          <ChevronLeftIcon />
+        </Button>
+      )}
       {pageNumbers.map((pageNumber) => (
         <Button key={pageNumber} onClick={() => navigate("/?p=" + pageNumber)}>
           {pageNumber}
         </Button>
       ))}
-      <Button>
-        <ChevronRightIcon />
-      </Button>
+      {pageInfo.nextPageNumber && (
+        <Button onClick={() => navigate("/?p=" + pageInfo.nextPageNumber)}>
+          <ChevronRightIcon />
+        </Button>
+      )}
     </Box>
   );
 }
