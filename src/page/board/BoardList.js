@@ -11,17 +11,19 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ChatIcon } from "@chakra-ui/icons";
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
 
+  const [params] = useSearchParams();
+
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("/api/board/list")
+      .get("/api/board/list?" + params)
       .then((response) => setBoardList(response.data));
   }, []);
 
