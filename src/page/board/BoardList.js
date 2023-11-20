@@ -22,7 +22,6 @@ import {
   faAngleRight,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
-import * as PropTypes from "prop-types";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -42,8 +41,6 @@ function PageButton({ variant, pageNumber, children }) {
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
-
-  const navigate = useNavigate();
 
   for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
     pageNumbers.push(i);
@@ -143,7 +140,7 @@ export function BoardList() {
                 onClick={() => navigate("/board/" + board.id)}
               >
                 <Td>{board.id}</Td>
-                <Td>{board.countLike != 0 && board.countLike}</Td>
+                <Td>{board.countLike !== 0 && board.countLike}</Td>
                 <Td>
                   {board.title}
                   {board.countComment > 0 && (
