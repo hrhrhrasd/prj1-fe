@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  Input,
   Spinner,
   Table,
   Tbody,
@@ -14,14 +15,30 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { ChatIcon } from "@chakra-ui/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ChatIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
+  faAngleLeft,
+  faAngleRight,
+  faHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import * as PropTypes from "prop-types";
+
+function PageButton({ variant, pageNumber, children }) {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+
+  function handleClick() {
+    params.set("p", pageNumber);
+    navigate("/?" + params);
+  }
+
+  return (
+    <Button variant={variant} onClick={handleClick}>
+      {children}
+    </Button>
+  );
+}
 
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
@@ -35,58 +52,59 @@ function Pagination({ pageInfo }) {
   return (
     <Box>
       {pageInfo.prevPageNumber && (
-        <Button variant={"ghost"} onClick={() => navigate("/?p=" + 1)}>
-          <ArrowLeftIcon boxSize={3} />
-        </Button>
+        <PageButton variant="ghost" pageNumber={pageInfo.prevPageNumber}>
+          <FontAwesomeIcon icon={faAngleLeft} />
+        </PageButton>
       )}
-      {pageInfo.prevPageNumber && (
-        <Button
-          variant={"ghost"}
-          onClick={() => navigate("/?p=" + pageInfo.prevPageNumber)}
-        >
-          <ChevronLeftIcon boxSize={6} />
-        </Button>
-      )}
+
       {pageNumbers.map((pageNumber) => (
-        <Button
+        <PageButton
+          key={pageNumber}
           variant={
             pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
           }
-          key={pageNumber}
-          onClick={() => navigate("/?p=" + pageNumber)}
+          pageNumber={pageNumber}
         >
           {pageNumber}
-        </Button>
+        </PageButton>
       ))}
+
       {pageInfo.nextPageNumber && (
-        <Button
-          variant={"ghost"}
-          onClick={() => navigate("/?p=" + pageInfo.nextPageNumber)}
-        >
-          <ChevronRightIcon boxSize={6} />
-        </Button>
-      )}
-      {pageInfo.nextPageNumber && (
-        <Button
-          variant={"ghost"}
-          onClick={() => navigate("/?p=" + pageInfo.lastPageNumber)}
-        >
-          <ArrowRightIcon boxSize={3} />
-        </Button>
+        <PageButton variant="ghost" pageNumber={pageInfo.nextPageNumber}>
+          <FontAwesomeIcon icon={faAngleRight} />
+        </PageButton>
       )}
     </Box>
   );
 }
 
-Pagination.propTypes = { pageInfo: PropTypes.any };
+function SearchComponent() {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearch() {
+    // /?k=keyword
+    const params = new URLSearchParams();
+    params.set("k", keyword);
+
+    navigate("/?" + params);
+  }
+
+  return (
+    <Flex>
+      <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+      <Button onClick={handleSearch}>검색</Button>
+    </Flex>
+  );
+}
 
 export function BoardList() {
   const [boardList, setBoardList] = useState(null);
   const [pageInfo, setPageInfo] = useState(null);
 
   const [params] = useSearchParams();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     axios.get("/api/board/list?" + params).then((response) => {
@@ -95,7 +113,7 @@ export function BoardList() {
     });
   }, [location]);
 
-  if (boardList === null || pageInfo === null) {
+  if (boardList === null) {
     return <Spinner />;
   }
 
@@ -107,8 +125,10 @@ export function BoardList() {
           <Thead>
             <Tr>
               <Th>id</Th>
+              <Th>
+                <FontAwesomeIcon icon={faHeart} />
+              </Th>
               <Th>title</Th>
-              <Th>like</Th>
               <Th>by</Th>
               <Th>at</Th>
             </Tr>
@@ -123,15 +143,16 @@ export function BoardList() {
                 onClick={() => navigate("/board/" + board.id)}
               >
                 <Td>{board.id}</Td>
+                <Td>{board.countLike != 0 && board.countLike}</Td>
                 <Td>
                   {board.title}
                   {board.countComment > 0 && (
                     <Badge>
-                      <ChatIcon />({board.countComment})
+                      <ChatIcon />
+                      {board.countComment}
                     </Badge>
                   )}
                 </Td>
-                <Td>{board.countLike}</Td>
                 <Td>{board.nickName}</Td>
                 <Td>{board.ago}</Td>
               </Tr>
@@ -139,6 +160,8 @@ export function BoardList() {
           </Tbody>
         </Table>
       </Box>
+
+      <SearchComponent />
       <Pagination pageInfo={pageInfo} />
     </Box>
   );
