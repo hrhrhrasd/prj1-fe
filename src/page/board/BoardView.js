@@ -122,14 +122,20 @@ export function BoardView() {
       </FormControl>
 
       {/* img 출력 */}
-      {board.fileNames.map((name) => (
+      {board.files.map((file) => (
         <Box
+          key={file.id}
           my={"5px"}
           border={"3px solid black"}
           height={"500px"}
           width={"800px"}
         >
-          <Image width={"100%"} height={"100%"} src={name} />
+          <Image
+            width={"100%"}
+            height={"100%"}
+            src={file.url}
+            alt={file.name}
+          />
         </Box>
       ))}
 
