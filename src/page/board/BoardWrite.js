@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   Textarea,
@@ -75,6 +76,7 @@ export function BoardWrite() {
             multiple
             onChange={(e) => setFiles(e.target.files)}
           />
+          <FormHelperText>개당 1MB, 총 10MB 까지 가능</FormHelperText>
         </FormControl>
 
         <Button
