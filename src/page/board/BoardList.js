@@ -21,6 +21,7 @@ import {
   faAngleLeft,
   faAngleRight,
   faHeart,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
@@ -121,8 +122,8 @@ export function BoardList() {
         <Table>
           <Thead>
             <Tr>
-              <Th>id</Th>
-              <Th>
+              <Th width={"5%"}>id</Th>
+              <Th width={"5%"} color={"red"}>
                 <FontAwesomeIcon icon={faHeart} />
               </Th>
               <Th>title</Th>
@@ -143,6 +144,12 @@ export function BoardList() {
                 <Td>{board.countLike !== 0 && board.countLike}</Td>
                 <Td>
                   {board.title}
+                  {board.countFile > 0 && (
+                    <Badge>
+                      <FontAwesomeIcon icon={faImage} />
+                      {board.countFile}
+                    </Badge>
+                  )}
                   {board.countComment > 0 && (
                     <Badge>
                       <ChatIcon />
