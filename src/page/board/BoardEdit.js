@@ -1,8 +1,10 @@
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
+  Image,
   Input,
   Modal,
   ModalBody,
@@ -16,13 +18,14 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useImmer } from "use-immer";
 import axios from "axios";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null);
+  const [deleteFiles, setDeleteFiles] = useState([]);
 
   // /edit/:id
   const { id } = useParams();
@@ -35,7 +38,7 @@ export function BoardEdit() {
     axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
-  }, []);
+  }, [deleteFiles]);
 
   if (board === null) {
     return <Spinner />;
@@ -71,6 +74,21 @@ export function BoardEdit() {
       .finally(() => onClose());
   }
 
+  function handleFileDelete(id) {
+    const delFile = [];
+    if (deleteFiles !== null) {
+      for (let i = 0; i < deleteFiles.length; i++) {
+        delFile.push(deleteFiles[i]);
+      }
+    }
+    delFile.push(id);
+    setDeleteFiles(delFile);
+    updateBoard((draft) => {
+      draft.deleteFiles = deleteFiles;
+    });
+    console.log(board);
+  }
+
   return (
     <Box>
       <h1>{id}번 글 수정</h1>
@@ -96,6 +114,35 @@ export function BoardEdit() {
           }
         />
       </FormControl>
+      {/* img 출력 */}
+      {board.files.map(
+        (file) =>
+          deleteFiles.includes(file.id) || (
+            <Box
+              key={file.id}
+              my={"5px"}
+              border={"3px solid black"}
+              height={"500px"}
+              width={"800px"}
+            >
+              <Flex width={"100%"} height={"100%"}>
+                <Image
+                  width={"100%"}
+                  height={"100%"}
+                  src={file.url}
+                  alt={file.name}
+                />
+                <Button
+                  onClick={() => {
+                    handleFileDelete(file.id);
+                  }}
+                >
+                  삭제
+                </Button>
+              </Flex>
+            </Box>
+          ),
+      )}
       <Button colorScheme="blue" onClick={onOpen}>
         저장
       </Button>
