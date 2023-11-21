@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,15 +11,23 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [uploadFiles, setUploadFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isAuthenticated } = useContext(LoginContext);
 
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate("/login");
+    }
+  }, []);
 
   function handleSubmit() {
     setIsSubmitting(true);

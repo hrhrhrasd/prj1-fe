@@ -42,7 +42,7 @@ export function BoardEdit() {
     axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
-  }, []);
+  }, [removeFileId]);
 
   if (board === null) {
     return <Spinner />;
@@ -131,19 +131,21 @@ export function BoardEdit() {
               onChange={handleRemoveFileSwitch}
             />
           </FormControl>
-          <Box
-            my={"5px"}
-            border={"3px solid black"}
-            height={"500px"}
-            width={"800px"}
-          >
-            <Image
-              width={"100%"}
-              height={"100%"}
-              src={file.url}
-              alt={file.name}
-            />
-          </Box>
+          {removeFileId.includes(file.id.toString()) || (
+            <Box
+              my={"5px"}
+              border={"3px solid black"}
+              height={"500px"}
+              width={"800px"}
+            >
+              <Image
+                width={"100%"}
+                height={"100%"}
+                src={file.url}
+                alt={file.name}
+              />
+            </Box>
+          )}
         </Box>
       ))}
 

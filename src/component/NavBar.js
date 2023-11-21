@@ -1,4 +1,4 @@
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect } from "react";
@@ -36,33 +36,36 @@ export function NavBar() {
   }
 
   return (
-    <Flex>
-      <Button onClick={() => navigate("/")}>
-        <FontAwesomeIcon icon={faHouse} />
-        <span style={{ paddingLeft: "5px" }}>home</span>
-      </Button>
-      {isAuthenticated() && (
-        <Button onClick={() => navigate("/write")}>write</Button>
-      )}
-      {isAuthenticated() || (
-        <Button onClick={() => navigate("/signup")}>signup</Button>
-      )}
-      {isAdmin() && (
-        <Button onClick={() => navigate("/member/list")}>회원목록</Button>
-      )}
-      {isAuthenticated() && (
-        <Button
-          onClick={() => {
-            navigate("/member?" + urlParams.toString());
-          }}
-        >
-          내정보
+    <Flex justifyContent={"space-between"}>
+      <Flex>
+        <Button onClick={() => navigate("/")}>
+          <FontAwesomeIcon icon={faHouse} />
+          <span style={{ paddingLeft: "5px" }}>home</span>
         </Button>
-      )}
-      {isAuthenticated() || (
-        <Button onClick={() => navigate("/login")}>로그인</Button>
-      )}
-      {isAuthenticated() && <Button onClick={handleLogout}>로그아웃</Button>}
+        {isAuthenticated() && (
+          <Button onClick={() => navigate("/write")}>write</Button>
+        )}
+        {isAuthenticated() || (
+          <Button onClick={() => navigate("/signup")}>signup</Button>
+        )}
+        {isAdmin() && (
+          <Button onClick={() => navigate("/member/list")}>회원목록</Button>
+        )}
+        {isAuthenticated() && (
+          <Button
+            onClick={() => {
+              navigate("/member?" + urlParams.toString());
+            }}
+          >
+            내정보
+          </Button>
+        )}
+        {isAuthenticated() || (
+          <Button onClick={() => navigate("/login")}>로그인</Button>
+        )}
+        {isAuthenticated() && <Button onClick={handleLogout}>로그아웃</Button>}
+      </Flex>
+      <Box>{login.nickName}님</Box>
     </Flex>
   );
 }
