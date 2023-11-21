@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
+  const [uploadFiles, setUploadFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast();
@@ -27,7 +27,7 @@ export function BoardWrite() {
       .postForm("/api/board/add", {
         title,
         content,
-        file,
+        uploadFiles,
       })
       .then(() => {
         toast({
@@ -74,7 +74,7 @@ export function BoardWrite() {
             type={"file"}
             accept={"/image/*"}
             multiple
-            onChange={(e) => setFile(e.target.files)}
+            onChange={(e) => setUploadFiles(e.target.files)}
           />
           <FormHelperText>개당 1MB, 총 10MB 까지 가능</FormHelperText>
         </FormControl>
