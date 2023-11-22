@@ -93,10 +93,11 @@ function SearchComponent() {
 
   return (
     <Flex>
-      <Select onChange={(e) => setCategory(e.target.value)}>
-        <option selected value={"all"}>
-          제목 + 내용
-        </option>
+      <Select
+        defaultValue={"all"}
+        onChange={(e) => setCategory(e.target.value)}
+      >
+        <option value={"all"}>제목 + 내용</option>
         <option value={"title"}>제목</option>
         <option value={"content"}>내용</option>
       </Select>
