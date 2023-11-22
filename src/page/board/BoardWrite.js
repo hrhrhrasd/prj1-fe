@@ -1,33 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { LoginContext } from "../../component/LoginProvider";
 
 export function BoardWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [uploadFiles, setUploadFiles] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { isAuthenticated } = useContext(LoginContext);
 
   const toast = useToast();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/login");
-    }
-  }, []);
 
   function handleSubmit() {
     setIsSubmitting(true);
@@ -62,39 +60,47 @@ export function BoardWrite() {
   }
 
   return (
-    <Box>
-      <h1>게시물 작성</h1>
-      <Box>
-        <FormControl>
-          <FormLabel>제목</FormLabel>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </FormControl>
-        <FormControl>
-          <FormLabel>본문</FormLabel>
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          ></Textarea>
-        </FormControl>
-        <FormControl>
-          <FormLabel>이미지</FormLabel>
-          <Input
-            type={"file"}
-            accept={"/image/*"}
-            multiple
-            onChange={(e) => setUploadFiles(e.target.files)}
-          />
-          <FormHelperText>개당 1MB, 총 10MB 까지 가능</FormHelperText>
-        </FormControl>
-
-        <Button
-          isDisabled={isSubmitting}
-          onClick={handleSubmit}
-          colorScheme="blue"
-        >
-          저장
-        </Button>
-      </Box>
-    </Box>
+    <Center>
+      <Card w={"lg"}>
+        <CardHeader>
+          <Heading>게시물 작성</Heading>
+        </CardHeader>
+        <CardBody>
+          <FormControl mb={5}>
+            <FormLabel>제목</FormLabel>
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>본문</FormLabel>
+            <Textarea
+              h={"sm"}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            ></Textarea>
+          </FormControl>
+          <FormControl mb={5}>
+            <FormLabel>이미지</FormLabel>
+            <Input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => setUploadFiles(e.target.files)}
+            />
+            <FormHelperText>
+              한 개 파일은 1MB 이내, 총 용량은 10MB 이내로 첨부하세요.
+            </FormHelperText>
+          </FormControl>
+        </CardBody>
+        <CardFooter>
+          <Button
+            isDisabled={isSubmitting}
+            onClick={handleSubmit}
+            colorScheme="blue"
+          >
+            저장
+          </Button>
+        </CardFooter>
+      </Card>
+    </Center>
   );
 }

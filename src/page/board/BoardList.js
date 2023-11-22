@@ -3,7 +3,9 @@ import {
   Badge,
   Box,
   Button,
+  Center,
   Flex,
+  Heading,
   Input,
   Select,
   Spinner,
@@ -22,8 +24,10 @@ import {
   faAngleLeft,
   faAngleRight,
   faHeart,
-  faImage,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
+import * as PropTypes from "prop-types";
+import { faImages } from "@fortawesome/free-regular-svg-icons";
 
 function PageButton({ variant, pageNumber, children }) {
   const [params] = useSearchParams();
@@ -44,36 +48,40 @@ function PageButton({ variant, pageNumber, children }) {
 function Pagination({ pageInfo }) {
   const pageNumbers = [];
 
+  const navigate = useNavigate();
+
   for (let i = pageInfo.startPageNumber; i <= pageInfo.endPageNumber; i++) {
     pageNumbers.push(i);
   }
 
   return (
-    <Box>
-      {pageInfo.prevPageNumber && (
-        <PageButton variant="ghost" pageNumber={pageInfo.prevPageNumber}>
-          <FontAwesomeIcon icon={faAngleLeft} />
-        </PageButton>
-      )}
+    <Center mt={5} mb={40}>
+      <Box>
+        {pageInfo.prevPageNumber && (
+          <PageButton variant="ghost" pageNumber={pageInfo.prevPageNumber}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </PageButton>
+        )}
 
-      {pageNumbers.map((pageNumber) => (
-        <PageButton
-          key={pageNumber}
-          variant={
-            pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
-          }
-          pageNumber={pageNumber}
-        >
-          {pageNumber}
-        </PageButton>
-      ))}
+        {pageNumbers.map((pageNumber) => (
+          <PageButton
+            key={pageNumber}
+            variant={
+              pageNumber === pageInfo.currentPageNumber ? "solid" : "ghost"
+            }
+            pageNumber={pageNumber}
+          >
+            {pageNumber}
+          </PageButton>
+        ))}
 
-      {pageInfo.nextPageNumber && (
-        <PageButton variant="ghost" pageNumber={pageInfo.nextPageNumber}>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </PageButton>
-      )}
-    </Box>
+        {pageInfo.nextPageNumber && (
+          <PageButton variant="ghost" pageNumber={pageInfo.nextPageNumber}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </PageButton>
+        )}
+      </Box>
+    </Center>
   );
 }
 
@@ -92,18 +100,26 @@ function SearchComponent() {
   }
 
   return (
-    <Flex>
-      <Select
-        defaultValue={"all"}
-        onChange={(e) => setCategory(e.target.value)}
-      >
-        <option value={"all"}>제목 + 내용</option>
-        <option value={"title"}>제목</option>
-        <option value={"content"}>내용</option>
-      </Select>
-      <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-      <Button onClick={handleSearch}>검색</Button>
-    </Flex>
+    <Center mt={5}>
+      <Flex gap={1}>
+        <Box>
+          <Select
+            defaultValue="all"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="all">전체</option>
+            <option value="title">제목</option>
+            <option value="content">본문</option>
+          </Select>
+        </Box>
+        <Box>
+          <Input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+        </Box>
+        <Button onClick={handleSearch}>
+          <FontAwesomeIcon icon={faSearch} />
+        </Button>
+      </Flex>
+    </Center>
   );
 }
 
@@ -128,18 +144,18 @@ export function BoardList() {
 
   return (
     <Box>
-      <h1>게시물 목록</h1>
-      <Box>
+      <Heading>게시물 목록</Heading>
+      <Box mt={8}>
         <Table>
           <Thead>
             <Tr>
-              <Th width={"5%"}>id</Th>
-              <Th width={"5%"} color={"red"}>
+              <Th w={"100px"}>id</Th>
+              <Th w={"70px"}>
                 <FontAwesomeIcon icon={faHeart} />
               </Th>
               <Th>title</Th>
-              <Th>by</Th>
-              <Th>at</Th>
+              <Th w={"150px"}>by</Th>
+              <Th w={"150px"}>at</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -152,19 +168,19 @@ export function BoardList() {
                 onClick={() => navigate("/board/" + board.id)}
               >
                 <Td>{board.id}</Td>
-                <Td>{board.countLike !== 0 && board.countLike}</Td>
+                <Td>{board.countLike != 0 && board.countLike}</Td>
                 <Td>
                   {board.title}
-                  {board.countFile > 0 && (
-                    <Badge>
-                      <FontAwesomeIcon icon={faImage} />
-                      {board.countFile}
-                    </Badge>
-                  )}
                   {board.countComment > 0 && (
                     <Badge>
                       <ChatIcon />
                       {board.countComment}
+                    </Badge>
+                  )}
+                  {board.countFile > 0 && (
+                    <Badge>
+                      <FontAwesomeIcon icon={faImages} />
+                      {board.countFile}
                     </Badge>
                   )}
                 </Td>
