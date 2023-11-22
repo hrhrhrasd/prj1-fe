@@ -36,7 +36,6 @@ export function NavBar() {
   }
 
   return (
-    <Flex justifyContent={"space-between"}>
       <Flex>
         <Button onClick={() => navigate("/")}>
           <FontAwesomeIcon icon={faHouse} />
@@ -65,7 +64,5 @@ export function NavBar() {
         )}
         {isAuthenticated() && <Button onClick={handleLogout}>로그아웃</Button>}
       </Flex>
-      <Box>{login.nickName}님</Box>
-    </Flex>
   );
 }
