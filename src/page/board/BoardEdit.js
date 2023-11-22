@@ -28,7 +28,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 export function BoardEdit() {
   const [board, updateBoard] = useImmer(null);
-  const [removeFileId, setRemoveFileId] = useState([]);
+  const [removeFileIds, setRemoveFileIds] = useState([]);
   const [uploadFiles, setUploadFiles] = useState(null);
 
   // /edit/:id
@@ -42,7 +42,7 @@ export function BoardEdit() {
     axios
       .get("/api/board/id/" + id)
       .then((response) => updateBoard(response.data));
-  }, [removeFileId]);
+  }, [removeFileIds]);
 
   if (board === null) {
     return <Spinner />;
@@ -57,7 +57,7 @@ export function BoardEdit() {
         id: board.id,
         title: board.title,
         content: board.content,
-        removeFileId,
+        removeFileIds,
         uploadFiles,
       })
       .then(() => {
@@ -86,9 +86,9 @@ export function BoardEdit() {
 
   function handleRemoveFileSwitch(e) {
     if (e.target.checked) {
-      setRemoveFileId([...removeFileId, e.target.value]);
+      setRemoveFileIds([...removeFileIds, e.target.value]);
     } else {
-      setRemoveFileId(removeFileId.filter((item) => item !== e.target.value));
+      setRemoveFileIds(removeFileIds.filter((item) => item !== e.target.value));
     }
   }
 
@@ -131,7 +131,7 @@ export function BoardEdit() {
               onChange={handleRemoveFileSwitch}
             />
           </FormControl>
-          {removeFileId.includes(file.id.toString()) || (
+          {removeFileIds.includes(file.id.toString()) || (
             <Box
               my={"5px"}
               border={"3px solid black"}
